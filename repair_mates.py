@@ -7,6 +7,7 @@
 
 # library imports
 
+import sys
 import argparse
 from Bio.SeqIO.QualityIO import FastqGeneralIterator # requires Biopython
 
@@ -21,7 +22,14 @@ parser.add_argument('reverse_reads', type = str,
 parser.add_argument('output_prefix', type = str,
         nargs = "?", help = "a name to prefix the output files")
 
+# if no args given, print help and exit
+
+if len(sys.argv) == 1:
+    parser.print_help(sys.stderr)
+    sys.exit(1)
+
 args = parser.parse_args()
+
 forward_handle = open(args.output_prefix + ".R1.fq", "w")
 reverse_handle = open(args.output_prefix + ".R2.fq", "w")
 orphan_handle = open(args.output_prefix + ".orphan.fq", "w")

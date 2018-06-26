@@ -65,9 +65,9 @@ def extract_seqs(seq_fl, wanted, out_fl):
 
 count = extract_seqs(sequence_file, wanted_list, output_file)
 
-print("Saved {} records from {} to {}".format(count, sequence_file, output_file))
+print("\n** Saved {} records from {} to {}".format(count, sequence_file, output_file))
 if count < len(wanted_list):
-    print("Warning: {} IDs not found in {}".format(len(wanted_list)-count, sequence_file))
+    print("** Warning: {} IDs not found in {}".format(len(wanted_list)-count, sequence_file))
 
 
 

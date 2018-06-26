@@ -18,11 +18,11 @@ parser = argparse.ArgumentParser("extract sequences from fasta or fastq file giv
                                  "note: ")
 
 parser.add_argument('-s', '--sequences', type = str,
-        nargs = 1, help = "sequence file either fasta or fastq")
+        nargs = "?", help = "sequence file either fasta or fastq")
 parser.add_argument('-w', '--wanted_list', type = str,
-        nargs = 1, help = "text file containing headers to be extracted")
+        nargs = "?", help = "text file containing headers to be extracted")
 parser.add_argument('-o', '--output', type = str,
-        nargs = 1, help = "output file name")
+        nargs = "?", help = "output file name")
 
 # if no args given, print help and exit
 
@@ -32,10 +32,24 @@ if len(sys.argv) == 1:
 
 args = parser.parse_args()
 
+# check required arguments are provided
+
+if args.sequences is None or \
+    args.wanted_list is None or \
+    args.output is None:
+    print("\n** required input missing\n"
+          "** a sequence file, wanted list, and output name are all required\n")
+    parser.print_help(sys.stderr)
+    sys.exit(1)
+
+
+sequence_file = args.sequences
+wanted_file = args.wanted_list
+output_file = args.output
+
 # get list and set of wanted header names
 
-wanted_list = [line.strip().lstrip(">") for line in open(args.wanted_list[0]) if line != ""]
-wanted_set = set(wanted_list)
+wanted_list = [line.strip().lstrip(">") for line in open(wanted_file) if line != ""]
 
 # function to extract sequences in the wanted list
 
@@ -49,11 +63,11 @@ def extract_seqs(seq_fl, wanted, out_fl):
                 count += 1
     return(count)
 
-count = extract_seqs(args.sequences[0], wanted_list, args.output[0])
+count = extract_seqs(sequence_file, wanted_list, output_file)
 
-print("Saved {} records from {} to {}".format(count, args.sequences[0], args.output[0]))
+print("Saved {} records from {} to {}".format(count, sequence_file, output_file))
 if count < len(wanted_list):
-    print("Warning: {} IDs not found in {}".format(len(wanted_list)-count, args.sequences[0]))
+    print("Warning: {} IDs not found in {}".format(len(wanted_list)-count, sequence_file))
 
 
 

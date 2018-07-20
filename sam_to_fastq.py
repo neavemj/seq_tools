@@ -8,12 +8,10 @@
 
 import sys
 import argparse
-from Bio.SeqIO.QualityIO import FastqGeneralIterator # requires Biopython
-from Bio import SeqIO
 
 # use argparse to grab command line arguments
 
-parser = argparse.ArgumentParser("convert sam file to forward and reverse fastq files\n")
+parser = argparse.ArgumentParser("convert sam file to forward, reverse and single fastq files\n")
 
 parser.add_argument('-s', '--sam_file', type = str,
                     nargs = "?", help = "sam file to convert")
@@ -39,13 +37,10 @@ if args.sam_file is None or args.output_prefix is None:
 sam_fl = args.sam_file
 output_prefix = args.output_prefix
 
-# create handles for the output
-
-forward_handle = open(args.output_prefix + ".R1.fastq", "w")
-reverse_handle = open(args.output_prefix + ".R2.fastq", "w")
-orphan_handle = open(args.output_prefix + ".single.fastq", "w")
+# read file initially to grab paired / single names
 
 print("Scanning sam file and building list of names...")
+
 paired_set = set()
 single_set = set()
 
@@ -62,6 +57,16 @@ with open(sam_fl) as fl:
             single_set.add(name)
 
 print("detected {} paired reads and {} single reads".format(len(paired_set), len(single_set)))
+
+# only create files for required read types
+# i.e. if there are no single end reads, no need to create empty file
+
+if len(paired_set) > 0:
+    forward_handle = open(args.output_prefix + ".R1.fastq", "w")
+    reverse_handle = open(args.output_prefix + ".R2.fastq", "w")
+
+if len(single_set) > 0:
+    orphan_handle = open(args.output_prefix + ".single.fastq", "w")
 
 print("writing output files")
 

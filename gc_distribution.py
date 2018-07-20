@@ -10,6 +10,7 @@ import sys
 import argparse
 from Bio import SeqIO
 from Bio.SeqUtils import GC
+import pandas as pd
 import matplotlib.pyplot as plt
 
 # use argparse to grab command line arguments
@@ -43,10 +44,9 @@ output_prefix = args.output_prefix
 # function for a fasta file
 
 def fasta_gc(fasta):
-    fasta_seqs = SeqIO.parse(open(fasta), "fasta")
     gc_dict = {}
-    for record in fasta_seqs:
-        gc = round(GC(record.seq), 0)
+    for record in SeqIO.parse(fasta, "fasta"):
+        gc = round(GC(record.seq), 1)
         if gc in gc_dict:
             gc_dict[gc] += 1
         else:
@@ -55,10 +55,15 @@ def fasta_gc(fasta):
 
 
 gc_dict = fasta_gc(seq_fl)
-
 gc_values = list(gc_dict.keys())
 gc_count = list(gc_dict.values())
 
-plt.bar(gc_values, gc_count)
+gc_df = pd.DataFrame({'gc': gc_values, 'gc_count': gc_count})
+gc_df = gc_df.sort_values(by=['gc'])
 
+print(gc_df)
+
+gc_df.to_csv(output_prefix + ".gc_hist.txt", sep="\t", index=False)
+
+gc_df.plot(x="gc", y="gc_count", kind="line", xlim=[0,100])
 plt.show()

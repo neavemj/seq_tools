@@ -66,8 +66,7 @@ print("detected {} paired reads and {} single reads".format(len(paired_set), len
 print("writing output files")
 
 with open(sam_fl) as fl:
-
-    paired = False
+    first_pair = True
     for line in fl:
         line = line.strip()
         if line.startswith("@"):
@@ -76,12 +75,15 @@ with open(sam_fl) as fl:
         name = cols[0]
         seq = cols[9]
         qual = cols[10]
-
         if name in paired_set:
-
-forward_handle.write("@%s\n%s\n+\n%s\n" % (title, seq, qual))
-
-
+            if first_pair == True:
+                forward_handle.write("@{}/1\n{}\n+\n{}\n".format(name, seq, qual))
+                first_pair = False
+            else:
+                reverse_handle.write("@{}/2\n{}\n+\n{}\n".format(name, seq, qual))
+                first_pair = True
+        else:
+            orphan_handle.write("@{}\n{}\n+\n{}\n".format(name, seq, qual))
 
 
 

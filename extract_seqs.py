@@ -47,11 +47,11 @@ sequence_file = args.sequences
 wanted_file = args.wanted_list
 output_file = args.output
 
-# get list and set of wanted header names
+# get list wanted header names
 
 wanted_list = [line.strip().lstrip(">").lstrip("@") for line in open(wanted_file) if line != ""]
 
-# function to extract sequences in the wanted list
+# function to extract sequences in the wanted list for fasta or fastq
 
 def extract_fasta_seqs(seq_fl, wanted, out_fl):
     count = 0
@@ -74,12 +74,15 @@ def extract_fastq_seqs(seq_fl, wanted, out_fl):
                 count += 1
     return(count)
 
+# file type simply detected by looking at file ending
+
 if sequence_file.endswith("fasta") or sequence_file.endswith("fa"):
     count = extract_fasta_seqs(sequence_file, wanted_list, output_file)
 elif sequence_file.endswith("fastq") or sequence_file.endswith("fq"):
     count = extract_fastq_seqs(sequence_file, wanted_list, output_file)
 else:
-    print("Your sequence files must end with 'fasta' or 'fa' for fasta files, or 'fastq' or 'fq' for fastq files")
+    print("** Error: Your sequence files must end with 'fasta' or 'fa' for fasta files, or 'fastq' or 'fq' for fastq "
+          "files")
     sys.exit(1)
 
 # print some output

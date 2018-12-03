@@ -49,11 +49,11 @@ output_file = args.output
 
 # get list and set of wanted header names
 
-wanted_list = [line.strip().lstrip(">") for line in open(wanted_file) if line != ""]
+wanted_list = [line.strip().lstrip(">").lstrip("@") for line in open(wanted_file) if line != ""]
 
 # function to extract sequences in the wanted list
 
-def extract_seqs(seq_fl, wanted, out_fl):
+def extract_fasta_seqs(seq_fl, wanted, out_fl):
     count = 0
     fasta_seqs = SeqIO.parse(open(seq_fl), 'fasta')
     with open(out_fl, "w") as f:
@@ -63,7 +63,26 @@ def extract_seqs(seq_fl, wanted, out_fl):
                 count += 1
     return(count)
 
-count = extract_seqs(sequence_file, wanted_list, output_file)
+def extract_fastq_seqs(seq_fl, wanted, out_fl):
+    count = 0
+    fastq_seqs = open(seq_fl)
+    with open(out_fl, "w") as f:
+        for title, seq, qual in FastqGeneralIterator(fastq_seqs):
+            name = title.split()[0]
+            if name in wanted:
+                f.write("@%s\n%s\n+\n%s\n" % (title, seq, qual))
+                count += 1
+    return(count)
+
+if sequence_file.endswith("fasta") or sequence_file.endswith("fa"):
+    count = extract_fasta_seqs(sequence_file, wanted_list, output_file)
+elif sequence_file.endswith("fastq") or sequence_file.endswith("fq"):
+    count = extract_fastq_seqs(sequence_file, wanted_list, output_file)
+else:
+    print("Your sequence files must end with 'fasta' or 'fa' for fasta files, or 'fastq' or 'fq' for fastq files")
+    sys.exit(1)
+
+# print some output
 
 print("\n** Saved {} records from {} to {}".format(count, sequence_file, output_file))
 if count < len(wanted_list):

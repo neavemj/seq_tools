@@ -76,7 +76,7 @@ def extract_fastq_seqs(seq_fl, wanted, out_fl):
 
 # file type simply detected by looking at file ending
 
-if sequence_file.endswith("fasta") or sequence_file.endswith("fa"):
+if sequence_file.endswith("fasta") or sequence_file.endswith("fa") or sequence_file.endswith("faa") or sequence_file.endswith("fna"):
     count = extract_fasta_seqs(sequence_file, wanted_list, output_file)
 elif sequence_file.endswith("fastq") or sequence_file.endswith("fq"):
     count = extract_fastq_seqs(sequence_file, wanted_list, output_file)

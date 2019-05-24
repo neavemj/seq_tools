@@ -15,9 +15,9 @@ parser = argparse.ArgumentParser("Given NCBI genbank record return fasta files o
 parser.add_argument('-g', '--genbank_file', type = str,
                     nargs = "?", help = "genbankfile")
 parser.add_argument('-n', '--nucl_output', type = str,
-                    nargs = "?", help = "fastq file containing reverse R2 reads")
+                    nargs = "?", help = "fasta file of nucleotide sequence")
 parser.add_argument('-p', '--prot_output', type = str,
-                    nargs = "?", help = "fastq file containing reverse R2 reads")
+                    nargs = "?", help = "fasta file of amino acids")
 
 # if no args given, print help and exit
 
@@ -55,5 +55,3 @@ for seq_record in SeqIO.parse(args.genbank_file, "genbank"):
                        seq_feature.qualifiers['product'][0],
                        seq_feature.qualifiers['translation'][0]))
 
-nucl_handle.close()
-prot_handle.close()

@@ -79,5 +79,5 @@ for i, val in enumerate(hst[0]):
     val_perc = round((val / sum(hst[0])) * 100) 
     val_stars = "*" * int(val_perc)
     # now nicely print this info off
-    print("Bin {} to {}, {} ({}%):\n{}".format(bin1, bin2, val, val_perc, val_stars))
+    print("Bin {} to {}, {} ({}%):\t{}".format(bin1, bin2, val, val_perc, val_stars))
 

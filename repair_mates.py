@@ -30,9 +30,9 @@ if len(sys.argv) == 1:
 
 args = parser.parse_args()
 
-forward_handle = open(args.output_prefix + ".R1.fq", "w")
-reverse_handle = open(args.output_prefix + ".R2.fq", "w")
-orphan_handle = open(args.output_prefix + ".orphan.fq", "w")
+forward_handle = open(args.output_prefix + ".R1.fastq", "w")
+reverse_handle = open(args.output_prefix + ".R2.fastq", "w")
+orphan_handle = open(args.output_prefix + ".orphan.fastq", "w")
 
 print("Scanning reverse file and building list of names...")
 reverse_ids = set()

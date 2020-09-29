@@ -72,12 +72,14 @@ with open(sequence_file) as fl:
 
                 start = gff_dict[seq.id][gene][0]
                 end = gff_dict[seq.id][gene][1]
-                product = gff_dict[seq.id][gene][2].replace(" ", "_").replace("/", "_")
+                product = gff_dict[seq.id][gene][2].replace(" ", "_").replace("/", "_").replace("'", "")
+
+                fl_name = args.gff_list.split(".")[0]
                 
                 gene_seq = seq[start+1:end]
-                gene_seq.id = seq.id + "_" + str(start) + "_" + str(end) + "_" + product
+                gene_seq.id = fl_name + "_" + seq.id + "_" + str(start) + "_" + str(end) + "_" + product
                 gene_seq.description = ""
-                gene_output = open("gene" + "_" + str(start) + "_" + product + ".fasta", "w")                
+                gene_output = open(fl_name + "_" + str(start) + "_" + product + ".fasta", "w")                
             
                 SeqIO.write(gene_seq, gene_output, "fasta")
                 count += 1

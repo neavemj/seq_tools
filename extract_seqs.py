@@ -70,6 +70,8 @@ def extract_fastq_seqs(seq_fl, wanted, out_fl):
         for title, seq, qual in FastqGeneralIterator(fastq_seqs):
             name = title.split()[0]
             if name in wanted:
+            # unhash below if want the opposite
+            #if name not in wanted:
                 f.write("@%s\n%s\n+\n%s\n" % (title, seq, qual))
                 count += 1
     return(count)
